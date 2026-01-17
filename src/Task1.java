@@ -1,6 +1,6 @@
 public class Task1 {
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
 
         Thread firstThread = new Thread(() -> {
             for (int i = 0; true; i++) {
