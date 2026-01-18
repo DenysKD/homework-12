@@ -1,7 +1,7 @@
 public class Task2 {
 
     private final int count;
-    private int current = 0;
+    private int current = 1;
 
     public Task2(int n) {
         this.count = n;
@@ -10,7 +10,8 @@ public class Task2 {
     public synchronized void fizz() throws InterruptedException {
         while (current <= count) {
             if (current % 3 == 0 && current % 5 != 0) {
-                System.out.print("fizz, ");
+                if (current == count) System.out.print("fizz");
+                else System.out.print("fizz, ");
                 current++;
                 notifyAll();
             } else {
@@ -22,7 +23,8 @@ public class Task2 {
     public synchronized void buzz() throws InterruptedException {
         while (current <= count) {
             if (current % 5 == 0 && current % 3 != 0) {
-                System.out.print("buzz, ");
+                if(current == count) System.out.print("buzz");
+                else System.out.print("buzz, ");
                 current++;
                 notifyAll();
             } else {
@@ -33,8 +35,9 @@ public class Task2 {
 
     public synchronized void fizzbuzz() throws InterruptedException {
         while (current <= count) {
-            if (current % 3 == 0 && current % 5 == 0 && current != 0) {
-                System.out.print("fizzbuzz, ");
+            if (current % 3 == 0 && current % 5 == 0) {
+                if(current == count) System.out.print("fizzbuzz");
+                else System.out.print("fizzbuzz, ");
                 current++;
                 notifyAll();
             } else {
@@ -45,8 +48,9 @@ public class Task2 {
 
     public synchronized void number() throws InterruptedException {
         while (current <= count) {
-            if (current % 3 != 0 && current % 5 != 0 || current == 0) {
-                System.out.print(current + ", ");
+            if (current % 3 != 0 && current % 5 != 0) {
+                if(current == count) System.out.print(current);
+                else System.out.print(current + ", ");
                 current++;
                 notifyAll();
             } else {
@@ -56,7 +60,7 @@ public class Task2 {
     }
 
     public static void main(String[] args) {
-        Task2 fb = new Task2(25);
+        Task2 fb = new Task2(15);
 
         Thread fizzThread = new Thread(() -> {
             try { fb.fizz(); } catch (InterruptedException ignored) {}
@@ -78,5 +82,14 @@ public class Task2 {
         buzzThread.start();
         fizzbuzzThread.start();
         numberThread.start();
+
+        try {
+            fizzThread.join();
+            buzzThread.join();
+            fizzbuzzThread.join();
+            numberThread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
